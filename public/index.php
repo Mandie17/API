@@ -11,7 +11,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch(true) {
 
-    case preg_match('#^tutos/(\d+)$#', $uri, $matches) && $method == 'GET':
+    case preg_match('#^tutos/pages(\d+)$#', $uri, $matches) && $method == 'GET':
 
         $id = $matches[1];
 
@@ -28,6 +28,35 @@ switch(true) {
         return $controller->index();
 
         break;
+    
+    case preg_match('#^tuto#', $uri) && $method == 'POST':
+
+        $controller = new tutoController();
+    
+        return $controller->add();
+    
+        break;
+        
+        case preg_match('#^tutos/(\d+)$#', $uri, $matches) && $method == 'PATCH':
+
+            $id = $matches[1];
+    
+            $controller = new tutoController();
+    
+            return $controller->update($id);
+    
+            break;
+    
+        case preg_match('#^tutos/(\d+)$#', $uri, $matches) && $method == 'DELETE':
+    
+            $id = $matches[1];
+    
+            $controller = new tutoController();
+    
+            return $controller->delete($id);
+    
+            break;
+                
 
     default:
     
@@ -36,3 +65,4 @@ switch(true) {
     echo json_encode('erreur 404');
     
 }
+

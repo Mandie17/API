@@ -32,15 +32,16 @@ class TutoManager extends Manager
 
     public function findAll()
     {
-
         // Connexion à la BDD
         $dbh = static::connectDb();
-
-        // Requête
-        $sth = $dbh->prepare('SELECT * FROM tutos');
+        $prPage = 5;
+        $offset = ($page * $prPage) - $prPage;
+     
+        $sth = $dbh->prepare('SELECT * FROM tutos '.'OFFSET '. $offset .'LIMIT 5');
         $sth->execute();
 
         $tutos = [];
+
 
         while($row = $sth->fetch(\PDO::FETCH_ASSOC)){
 
@@ -83,6 +84,26 @@ class TutoManager extends Manager
 
        // Modification d'un tuto en BDD
 
+        $dbh = static::connectDb();
+
+        $id = $tuto->getId();
+        $titre = $tuto->getTitle();
+        $descr = $tuto->getDescription();
+        $dateAt = $tuto->getCreatedAt();
+
+        $sth = $dbh->prepare('Update tutos SET title="'.$titre.'",description="'.$descr.'",createdAt="'.$dateAt.'" WHERE id='.$id);
+        $sth->execute();
+        return $tuto;
+    }
+
+
+    public function delete(Tuto $tuto)
+    {
+        $dbh = static::connectDb();
+
+        $id = $tuto->getId();
+        $sth = $dbh->prepare('delete from tutos where id='.$id);
+        $sth->execute();
     }
 
 
