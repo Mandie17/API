@@ -11,14 +11,17 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch(true) {
 
-    case preg_match('#^tutos/pages(\d+)$#', $uri, $matches) && $method == 'GET':
+    case preg_match('#^tutos((\?)|$)#', $uri) && $method == 'GET':
 
-        $id = $matches[1];
-
-        $controller = new tutoController();
-
-        return $controller->show($id);
-
+        if (isset($_GET["page"]) && $_GET["page"] > 0){
+            $page = $_GET["page"];
+            $controller=new tutoController();
+            return $controller->findByPage($page);
+        }else{
+            http_response_code(404);
+            echo json_encode('Erreuuuuur pg0');
+        }
+        
         break;
     
     case preg_match('#^tutos((\?)|$)#', $uri) && $method == 'GET':

@@ -34,14 +34,12 @@ class TutoManager extends Manager
     {
         // Connexion à la BDD
         $dbh = static::connectDb();
-        $prPage = 5;
-        $offset = ($page * $prPage) - $prPage;
-     
-        $sth = $dbh->prepare('SELECT * FROM tutos '.'OFFSET '. $offset .'LIMIT 5');
+
+        // Requête
+        $sth = $dbh->prepare('SELECT * FROM tutos ORDER BY createdAt ASC');
         $sth->execute();
 
         $tutos = [];
-
 
         while($row = $sth->fetch(\PDO::FETCH_ASSOC)){
 
@@ -106,6 +104,32 @@ class TutoManager extends Manager
         $sth->execute();
     }
 
+    public function findByPage($page)
+    {
+        $dbh = static::connectDb();
+
+
+        $parPage = 5;
+        $offset = ($page * $parPage) - $parPage;
+
+        // Requête
+        $sth = $dbh->prepare('SELECT * FROM tutos LIMIT 5 OFFSET '.$offset);
+        $sth->execute();
+        $tutos = [];
+
+        while($row = $sth->fetch(\PDO::FETCH_ASSOC)){
+
+            $tuto = new Tuto();
+            $tuto->setId($row['id']);
+            $tuto->setTitle($row['title']);
+            $tuto->setDescription($row['description']);
+            $tuto->setCreatedAt($row["createdAt"]);
+            $tutos[] = $tuto;
+
+        }
+
+        return $tutos;
+    }
 
 
 
