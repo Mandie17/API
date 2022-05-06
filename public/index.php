@@ -11,6 +11,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch(true) {
 
+     
     case preg_match('#^tutos((\?)|$)#', $uri) && $method == 'GET':
 
         if (isset($_GET["page"]) && $_GET["page"] > 0){
@@ -18,18 +19,13 @@ switch(true) {
             $controller=new tutoController();
             return $controller->findByPage($page);
         }else{
-            http_response_code(404);
-            echo json_encode('Erreuuuuur pg0');
-        }
-        
-        break;
-    
-    case preg_match('#^tutos((\?)|$)#', $uri) && $method == 'GET':
-
-        $controller = new tutoController();
+          
+             $controller = new tutoController();
 
         return $controller->index();
 
+        }
+      
         break;
     
     case preg_match('#^tuto#', $uri) && $method == 'POST':
